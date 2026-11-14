@@ -44,11 +44,27 @@ If the cloud or the thermostat is unreachable, HomeKit shows "No Response" inste
   "password": "your Siemens app password",
   "apiKey": "32-character Ocp-Apim-Subscription-Key",
   "pollInterval": 60,
-  "devices": [{ "plantId": "P...", "name": "Living Room" }]
+  "devices": [
+    { "plantId": "1st Floor", "name": "First floor" },
+    { "plantId": "Garage", "exclude": true }
+  ]
 }
 ```
 
-`devices` is optional. Use it to rename thermostats or hide them (`"exclude": true`). Plant IDs are printed in the log at startup.
+### Naming thermostats
+
+By default each thermostat is named after its room in the Siemens app.
+
+To use other names, or to hide a thermostat, add it under **Thermostat names** (`devices`) **before pairing with
+HomeKit**. Identify it by its room name as shown in the Siemens app (case-insensitive) or by its plant ID.
+At startup the log lists every thermostat:
+
+```
+Thermostat "1st Floor": Siemens room "1st Floor", plantId P7fb024f2-...
+```
+
+Names are set before the thermostat is published to HomeKit. If you rename after pairing, the Home app usually keeps
+its own name. Either rename it in the Home app, or remove the bridge from the Home app and pair it again.
 
 ## Getting the API key
 
