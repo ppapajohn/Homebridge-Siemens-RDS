@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 (2026-11-14)
+
+- Declare HAP support (`supports-hap` keyword) for the Homebridge plugin directory
+- Config schema: `required` fields listed at object level, as JSON Schema expects
+
 ## 1.0.1 (2026-11-14)
 
 First public release.
