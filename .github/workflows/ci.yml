@@ -1,0 +1,29 @@
+# Checks that the plugin installs and loads on every Node.js LTS version Homebridge supports.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [22, 24, 26]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci --omit=dev
+      - name: Load plugin and settings page server
+        run: |
+          node -e "require('./index.js'); JSON.parse(require('fs').readFileSync('config.schema.json'))"
+          node --check homebridge-ui/server.js
+      - name: Package contents
+        run: npm pack --dry-run

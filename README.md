@@ -4,6 +4,18 @@ Homebridge plugin for Siemens RDS110 / RDS110.R / RDS120 smart thermostats. It t
 Climatix IC cloud (`api.climatixic.com`), which is the same backend the Siemens Smart Thermostat RDS app uses.
 The API logic is ported from the openHAB `siemensrds` binding (EPL-2.0).
 
+## Install
+
+In the Homebridge UI: **Plugins** → search for **Siemens RDS** → **Install**. Or from the command line:
+
+```
+sudo npm install -g homebridge-siemens-rds
+```
+
+Then open the plugin settings, enter the Siemens app e-mail, password and API key (see [Getting the API key](#getting-the-api-key)), and restart Homebridge.
+
+Requires Node.js 22, 24 or 26 and Homebridge 1.8 or 2.x.
+
 ## What HomeKit sees
 
 One Thermostat accessory per RDS on your Siemens account:
@@ -72,7 +84,7 @@ The startup log lists every thermostat:
 Thermostat "1st Floor Hallway": Siemens room "1st Floor", plantId P7fb024f2-...
 ```
 
-## Install from source
+## Install from source (development)
 
 ```
 git clone https://github.com/ppapajohn/Homebridge-Siemens-RDS.git
