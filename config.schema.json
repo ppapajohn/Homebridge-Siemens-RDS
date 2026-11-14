@@ -2,6 +2,7 @@
   "pluginAlias": "SiemensRDS",
   "pluginType": "platform",
   "singular": true,
+  "customUi": true,
   "headerDisplay": "Siemens RDS110/RDS120 smart thermostats via the Siemens Climatix IC cloud.",
   "schema": {
     "type": "object",

@@ -1,0 +1,166 @@
+<style>
+  .rds-muted { opacity: .7; font-size: .85em; }
+  .rds-table td { vertical-align: middle; }
+  .rds-table input[type=text] { min-width: 12em; }
+  .rds-section { margin-bottom: 1.5rem; }
+</style>
+
+<div class="rds-section">
+  <h5>Siemens account</h5>
+  <div class="mb-2">
+    <label class="form-label" for="email">E-mail (Siemens app)</label>
+    <input class="form-control" type="email" id="email" autocomplete="off">
+  </div>
+  <div class="mb-2">
+    <label class="form-label" for="password">Password (Siemens app)</label>
+    <input class="form-control" type="password" id="password" autocomplete="new-password">
+  </div>
+  <div class="mb-2">
+    <label class="form-label" for="apiKey">Climatix API key</label>
+    <input class="form-control" type="password" id="apiKey" autocomplete="off">
+    <div class="form-text">The 32-character <code>Ocp-Apim-Subscription-Key</code> used by the Siemens RDS app.</div>
+  </div>
+</div>
+
+<div class="rds-section">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="mb-0">Thermostats</h5>
+    <button type="button" class="btn btn-primary btn-sm" id="refresh">Find thermostats</button>
+  </div>
+  <div class="form-text mb-2">
+    Each thermostat is named after its room in the Siemens app. Set a different name here
+    <strong>before pairing with HomeKit</strong>, or hide thermostats you don't want in HomeKit.
+  </div>
+  <div id="status" class="rds-muted mb-2"></div>
+  <div class="table-responsive">
+    <table class="table table-sm rds-table" id="table" style="display:none">
+      <thead>
+        <tr><th>Siemens room</th><th>Name in HomeKit</th><th class="text-center">Hide</th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="rds-section">
+  <h5>Options</h5>
+  <div class="form-check mb-2">
+    <input class="form-check-input" type="checkbox" id="awaySwitch">
+    <label class="form-check-label" for="awaySwitch">Show an Away switch next to each thermostat</label>
+  </div>
+  <div class="mb-2" style="max-width: 16em">
+    <label class="form-label" for="pollInterval">Polling interval (seconds)</label>
+    <input class="form-control" type="number" id="pollInterval" min="30" max="600">
+  </div>
+</div>
+
+<script>
+(async () => {
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  // ---- load current config (keep every key we don't edit, e.g. _bridge) ----
+  const blocks = await homebridge.getPluginConfig();
+  const cfg = blocks[0] || {};
+  cfg.platform = 'SiemensRDS';
+  cfg.name = cfg.name || 'Siemens RDS';
+
+  $('email').value = cfg.email || '';
+  $('password').value = cfg.password || '';
+  $('apiKey').value = cfg.apiKey || '';
+  $('awaySwitch').checked = cfg.awaySwitch !== false;
+  $('pollInterval').value = cfg.pollInterval || 60;
+
+  // devices: per-thermostat overrides, keyed by plantId or room name
+  let devices = Array.isArray(cfg.devices) ? cfg.devices.filter((d) => d && (d.plantId || d.match)) : [];
+  let thermostats = []; // last result from the Siemens cloud
+
+  const norm = (v) => String(v || '').trim().toLowerCase();
+  const findEntry = (t) => devices.find((d) => {
+    const k = norm(d.match || d.plantId);
+    return k === norm(t.plantId) || (t.room && k === norm(t.room));
+  });
+
+  async function save() {
+    cfg.email = $('email').value.trim();
+    cfg.password = $('password').value;
+    cfg.apiKey = $('apiKey').value.trim();
+    cfg.awaySwitch = $('awaySwitch').checked;
+    const p = parseInt($('pollInterval').value, 10);
+    cfg.pollInterval = Number.isFinite(p) ? Math.min(Math.max(p, 30), 600) : 60;
+    const clean = devices
+      .filter((d) => (d.name && d.name.trim()) || d.exclude)
+      .map((d) => {
+        const o = { plantId: d.plantId || d.match };
+        if (d.name && d.name.trim()) o.name = d.name.trim();
+        if (d.exclude) o.exclude = true;
+        return o;
+      });
+    if (clean.length) cfg.devices = clean; else delete cfg.devices;
+    await homebridge.updatePluginConfig([cfg]);
+  }
+
+  function render() {
+    const rows = $('rows');
+    rows.innerHTML = '';
+    if (!thermostats.length) { $('table').style.display = 'none'; return; }
+    $('table').style.display = '';
+    for (const t of thermostats) {
+      const entry = findEntry(t);
+      const tr = document.createElement('tr');
+      const temp = t.temperature != null ? ` · ${t.temperature}°C` : '';
+      const state = t.error ? ' · <span class="text-warning">not readable</span>' : (t.online ? '' : ' · <span class="text-warning">offline</span>');
+      tr.innerHTML = `
+        <td><div>${esc(t.room || '(no room name)')}</div>
+            <div class="rds-muted">${esc(t.model)}${temp}${state}<br><code>${esc(t.plantId)}</code></div></td>
+        <td><input type="text" class="form-control form-control-sm" placeholder="${esc(t.room || 'Name')}"
+                   value="${esc(entry && entry.name ? entry.name : '')}"></td>
+        <td class="text-center"><input type="checkbox" class="form-check-input" ${entry && entry.exclude ? 'checked' : ''}></td>`;
+      const [nameInput, hideBox] = tr.querySelectorAll('input');
+      const upsert = () => {
+        // store overrides by plantId; drop any older entry for the same thermostat (e.g. one keyed by room name)
+        devices = devices.filter((d) => d !== findEntry(t));
+        const name = nameInput.value;
+        const exclude = hideBox.checked;
+        if ((name && name.trim()) || exclude) devices.push({ plantId: t.plantId, name, exclude });
+        nameInput.disabled = exclude;
+        save();
+      };
+      nameInput.disabled = hideBox.checked;
+      nameInput.addEventListener('input', upsert);
+      hideBox.addEventListener('change', upsert);
+      rows.appendChild(tr);
+    }
+    homebridge.fixScrollHeight && homebridge.fixScrollHeight();
+  }
+
+  async function refresh() {
+    const email = $('email').value.trim(), password = $('password').value, apiKey = $('apiKey').value.trim();
+    if (!email || !password || !apiKey) {
+      $('status').textContent = 'Enter e-mail, password and API key, then press "Find thermostats".';
+      return;
+    }
+    $('status').textContent = 'Asking the Siemens cloud…';
+    homebridge.showSpinner();
+    try {
+      thermostats = await homebridge.request('/thermostats', { email, password, apiKey, apiBase: cfg.apiBase });
+      $('status').textContent = thermostats.length
+        ? `Found ${thermostats.length} thermostat(s). Leave "Name in HomeKit" empty to use the Siemens room name.`
+        : 'No RDS thermostats on this Siemens account.';
+      render();
+    } catch (e) {
+      $('status').textContent = '';
+      homebridge.toast.error(e.message, 'Siemens RDS');
+    } finally {
+      homebridge.hideSpinner();
+    }
+  }
+
+  for (const id of ['email', 'password', 'apiKey', 'pollInterval']) $(id).addEventListener('input', save);
+  $('awaySwitch').addEventListener('change', save);
+  $('refresh').addEventListener('click', refresh);
+
+  await save();     // normalise the config block (platform/name) without changing anything else
+  refresh();        // list thermostats straight away when credentials are present
+})();
+</script>

@@ -53,18 +53,34 @@ If the cloud or the thermostat is unreachable, HomeKit shows "No Response" inste
 
 ### Naming thermostats
 
-By default each thermostat is named after its room in the Siemens app.
+The plugin has its own settings page in the Homebridge UI (Plugins → Siemens RDS → Settings):
 
-To use other names, or to hide a thermostat, add it under **Thermostat names** (`devices`) **before pairing with
-HomeKit**. Identify it by its room name as shown in the Siemens app (case-insensitive) or by its plant ID.
-At startup the log lists every thermostat:
+1. Enter the Siemens app e-mail, password and API key.
+2. The page asks the Siemens cloud and lists every thermostat on the account, one row each, with its Siemens room name.
+3. Type a **Name in HomeKit** for any thermostat you want to rename, or tick **Hide**.
+   Leave the name empty to keep the Siemens room name.
+4. Save and restart Homebridge.
+
+Do this **before pairing with HomeKit**. Names are set before the thermostats are published, but once paired the
+Home app keeps its own names. To apply new names after pairing, rename them in the Home app, or remove the bridge
+from the Home app and pair it again.
+
+In `config.json`, entries in `devices` match a thermostat by plant ID or by Siemens room name (case-insensitive).
+The startup log lists every thermostat:
 
 ```
-Thermostat "1st Floor": Siemens room "1st Floor", plantId P7fb024f2-...
+Thermostat "1st Floor Hallway": Siemens room "1st Floor", plantId P7fb024f2-...
 ```
 
-Names are set before the thermostat is published to HomeKit. If you rename after pairing, the Home app usually keeps
-its own name. Either rename it in the Home app, or remove the bridge from the Home app and pair it again.
+## Install from source
+
+```
+git clone https://github.com/ppapajohn/Homebridge-Siemens-RDS.git
+cd Homebridge-Siemens-RDS && npm install --omit=dev
+sudo npm install -g "$PWD"
+```
+
+To update: `git pull && npm install --omit=dev`, then restart Homebridge.
 
 ## Getting the API key
 
