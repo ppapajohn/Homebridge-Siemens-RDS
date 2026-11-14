@@ -14,12 +14,22 @@ One Thermostat accessory per RDS on your Siemens account:
 | Humidity | Room relative humidity (`RHuRel`) |
 | Target temperature (0.5° steps, 6–35 °C) | Setpoint (`SpTR`) |
 | Heating / idle | Output state (`HCSta`) |
-| Mode **Auto** | Automatic time program (writes `REei=5`) |
-| Mode **Heat** | Manual comfort (writes `CmfBtn=1`) |
-| Mode **Off** | Thermostat off (writes `OccMod=Off`) |
-| Separate **Away** switch | Away on/off (writes `OccMod=Absent` / `Present`) |
+| Mode **Auto** | **Auto**: follows the RDS weekly time program (writes `REei=5`) |
+| Mode **Heat** | **Manual**: holds the temperature you set and ignores the time program (writes `CmfBtn=1`) |
+| Mode **Off** | **Off**: thermostat switched off (writes `OccMod=Off`) |
+| Separate **"<name> Away"** switch | **Away**: on/off (writes `OccMod=Absent` / `Present`) |
 
-HomeKit's thermostat mode names are fixed by Apple, so Away is a separate switch. Disable it with `"awaySwitch": false`.
+### Why "Heat" means Manual, and why Away is a switch
+
+Apple's Home app only offers four fixed thermostat modes: Off, Heat, Cool and Auto. A plugin can hide modes
+(Cool is hidden here) but cannot add new ones or rename them. So:
+
+- **Heat in the Home app = Manual in the Siemens app.** The label is set by iOS and can't be changed.
+- **Away** has no matching HomeKit mode, so it is a separate switch next to each thermostat.
+  Turn it off with `"awaySwitch": false`.
+- Selecting Heat, Auto or Off clears Away.
+
+Thermostats are named after the room set in the Siemens app (e.g. "Ground Floor"), unless you set a name in `devices`.
 
 The plugin polls every 60 s by default. After any change from HomeKit it polls every 8 s for about 50 s.
 If the cloud or the thermostat is unreachable, HomeKit shows "No Response" instead of stale values.
