@@ -1,5 +1,4 @@
 # Homebridge-Siemens-RDS
-npm to integrate Siemens RDS Thermostats to your Homebridge installation.
 
 Homebridge plugin for Siemens RDS110 / RDS110.R / RDS120 smart thermostats. It talks to the Siemens
 Climatix IC cloud (`api.climatixic.com`), which is the same backend the Siemens Smart Thermostat RDS app uses.
