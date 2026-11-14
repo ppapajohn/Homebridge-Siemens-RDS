@@ -1,0 +1,32 @@
+{
+  "pluginAlias": "SiemensRDS",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Siemens RDS110/RDS120 smart thermostats via the Siemens Climatix IC cloud.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": { "title": "Name", "type": "string", "default": "Siemens RDS", "required": true },
+      "email": { "title": "Siemens app e-mail", "type": "string", "format": "email", "required": true },
+      "password": { "title": "Siemens app password", "type": "string", "required": true,
+        "x-schema-form": { "type": "password" } },
+      "apiKey": { "title": "Climatix API key (Ocp-Apim-Subscription-Key)", "type": "string", "required": true,
+        "description": "32-character key used by the Siemens Smart Thermostat RDS app.",
+        "x-schema-form": { "type": "password" } },
+      "awaySwitch": { "title": "Show a separate Away switch", "type": "boolean", "default": true },
+      "pollInterval": { "title": "Polling interval (seconds)", "type": "integer", "default": 60, "minimum": 30, "maximum": 600 },
+      "devices": {
+        "title": "Per-thermostat options (optional)",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "plantId": { "title": "Plant ID (shown in the Homebridge log)", "type": "string", "required": true },
+            "name": { "title": "Name in HomeKit", "type": "string" },
+            "exclude": { "title": "Hide from HomeKit", "type": "boolean", "default": false }
+          }
+        }
+      }
+    }
+  }
+}

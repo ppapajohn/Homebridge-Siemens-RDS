@@ -1,0 +1,33 @@
+{
+  "name": "homebridge-siemens-rds",
+  "displayName": "Siemens RDS Smart Thermostat",
+  "version": "0.2.0",
+  "description": "Homebridge plugin for Siemens RDS110 / RDS120 smart thermostats via the Siemens Climatix IC cloud (port of the openHAB siemensrds binding).",
+  "main": "index.js",
+  "license": "EPL-2.0",
+  "keywords": [
+    "homebridge-plugin",
+    "siemens",
+    "rds110",
+    "thermostat",
+    "climatix"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "homebridge": "^1.8.0 || ^2.0.0-beta.0"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "config.schema.json",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ppapajohn/Homebridge-Siemens-RDS.git"
+  },
+  "homepage": "https://github.com/ppapajohn/Homebridge-Siemens-RDS#readme",
+  "bugs": {
+    "url": "https://github.com/ppapajohn/Homebridge-Siemens-RDS/issues"
+  }
+}
