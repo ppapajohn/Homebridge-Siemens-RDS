@@ -111,10 +111,12 @@ Run Homebridge in debug mode to see the raw values on every poll (room, target, 
 
 ## Support
 
-Hi, I'm Panos 👋 Amateur creator by night, cybersecurity and tech enthusiast by day (and, let's be honest, also by night). I build small things that make my smart home a bit smarter. This plugin is the one that finally got my Siemens RDS thermostats talking to HomeKit. 🏠🔐
+Hi, I'm Panos 👋 
 
-Full disclosure: any "coffee" you send will never be drunk. ☕❌ It goes straight into my real passion, **cycling** 🚴‍♂️, and the bottomless pit of bike upgrades and gadgets that every cyclist swears is "the last one". (It never is.) 💸🔧
+Amateur creator by night, cybersecurity and tech enthusiast by day (and, let's be honest, also by night 😂). I contribute to whatever I can either by coding or by donating. This plugin is the one that finally got my Siemens RDS thermostats talking to HomeKit. 🏠🔐
 
-If this plugin saved you an evening of fighting with a thermostat, you can [chip in on PayPal](https://paypal.me/PPapagiannakopoulos). I promise to turn it into watts, not caffeine. ⚡🚲
+Full disclosure: any PayPal.me you send will never be drunk. ☕❌ It goes straight into my real passion, **cycling** 🚴‍♂️, and the bottomless pit of bike upgrades and gadgets that every cyclist swears is "the last one". (It never is. 🤣) 💸🔧
 
-See you on the road, or in the logs! 🙌
+If this plugin saved you an evening of fighting with a thermostat, you can [chip in on PayPal](https://paypal.me/PPapagiannakopoulos). I promise to turn it into watts and other goodies, not caffeine. ⚡🚲
+
+See you on the road, or (hopefully not) in the logs! 🙌
