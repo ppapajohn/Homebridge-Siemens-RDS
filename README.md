@@ -108,3 +108,13 @@ the plugin logs in with your e-mail and password and renews its own 14-day token
 ## Logs
 
 Run Homebridge in debug mode to see the raw values on every poll (room, target, RH, output, OccMod, PrOpModRsn priority).
+
+## Support
+
+Hi, I'm Panos 👋 Amateur creator by night, cybersecurity and tech enthusiast by day (and, let's be honest, also by night). I build small things that make my smart home a bit smarter. This plugin is the one that finally got my Siemens RDS thermostats talking to HomeKit. 🏠🔐
+
+Full disclosure: any "coffee" you send will never be drunk. ☕❌ It goes straight into my real passion, **cycling** 🚴‍♂️, and the bottomless pit of bike upgrades and gadgets that every cyclist swears is "the last one". (It never is.) 💸🔧
+
+If this plugin saved you an evening of fighting with a thermostat, you can [chip in on PayPal](https://paypal.me/PPapagiannakopoulos). I promise to turn it into watts, not caffeine. ⚡🚲
+
+See you on the road, or in the logs! 🙌
