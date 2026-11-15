@@ -1,5 +1,8 @@
 # Homebridge-Siemens-RDS
 
+[![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=for-the-badge&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
+[![npm](https://img.shields.io/npm/v/homebridge-siemens-rds?style=for-the-badge)](https://www.npmjs.com/package/homebridge-siemens-rds)
+
 Homebridge plugin for Siemens RDS110 / RDS110.R / RDS120 smart thermostats. It talks to the Siemens
 Climatix IC cloud (`api.climatixic.com`), which is the same backend the Siemens Smart Thermostat RDS app uses.
 The API logic is ported from the openHAB `siemensrds` binding (EPL-2.0).
