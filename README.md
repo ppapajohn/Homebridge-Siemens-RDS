@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/icon-512.png" alt="Homebridge Siemens RDS icon" width="128"></p>
+
 # Homebridge-Siemens-RDS
 
 [![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=for-the-badge&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
