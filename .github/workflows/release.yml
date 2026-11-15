@@ -1,7 +1,8 @@
-# Publishes to npm when a GitHub release is published, using npm trusted publishing (OIDC).
-# No npm token is stored anywhere: npm trusts this workflow file in this repository.
+# Stages a new npm version when a GitHub release is published, using npm trusted publishing (OIDC)
+# and staged publishing. No npm token is stored anywhere: npm trusts this workflow file in this repository.
+# The version only goes live after the maintainer approves it on npmjs.com (2FA / security key).
 # One-time setup on npmjs.com: package → Settings → Trusted Publisher → GitHub Actions,
-# user "ppapajohn", repository "Homebridge-Siemens-RDS", workflow "release.yml".
+# user "ppapajohn", repository "Homebridge-Siemens-RDS", workflow "release.yml", stage-only.
 name: Release
 
 on:
@@ -42,7 +43,7 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Make sure npm supports trusted publishing (11.5.1+)
+      - name: Make sure npm supports staged publishing (11.15.0+)
         if: steps.exists.outputs.skip != 'true'
         run: npm install -g npm@latest && npm --version
 
@@ -53,6 +54,6 @@ jobs:
           node -e "require('./index.js')"
           npm pack --dry-run
 
-      - name: Publish to npm
+      - name: Stage on npm (approve on npmjs.com to publish)
         if: steps.exists.outputs.skip != 'true'
-        run: npm publish --access public
+        run: npm stage publish --access public
