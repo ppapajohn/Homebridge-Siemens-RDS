@@ -13,6 +13,10 @@
   "bugs": {
     "url": "https://github.com/ppapajohn/Homebridge-Siemens-RDS/issues"
   },
+  "funding": {
+    "type": "paypal",
+    "url": "https://paypal.me/PPapagiannakopoulos"
+  },
   "keywords": [
     "homebridge-plugin",
     "supports-hap",

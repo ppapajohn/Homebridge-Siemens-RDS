@@ -4,6 +4,7 @@
 
 - Verified by Homebridge
 - Rename accessories with `updateDisplayName()`, so Homebridge's copy of the name stays in step (review feedback)
+- Donate link (PayPal) on the plugin tile in the Homebridge UI ☕🚴
 
 ## 1.0.2 (2026-11-14)
 
