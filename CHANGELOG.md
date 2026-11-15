@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4 (2026-11-15)
+
+- Releases are now published from GitHub Actions with npm trusted publishing and staged publishing: no npm tokens, every version approved by the maintainer with 2FA before it goes live
+
 ## 1.0.3 (2026-11-15)
 
 - Verified by Homebridge
